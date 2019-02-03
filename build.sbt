@@ -13,9 +13,7 @@ libraryDependencies ++= Seq(
   "org.specs2"    %% "specs2-core"            % "4.3.5"  % "test",
 )
 
-scalacOptions in Test ++= Seq("-Yrangepos")
-
-scalacOptions in Test ++= Seq("-Yrangepos")
+scalacOptions in Test ++= Seq("-Yrangepos", "-Xlint")
 
 // Lint
 scapegoatVersion in ThisBuild := "1.3.8"
