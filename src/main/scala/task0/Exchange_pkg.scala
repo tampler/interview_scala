@@ -1,8 +1,11 @@
 
-package object Exchange_pkg
+package Exchange_pkg
+
 import scala.{Enumeration}
+import scalaz.{IList}
 
 
+// Common Types
 sealed abstract class Currency
 sealed abstract class Security
 sealed abstract class Trader
@@ -26,4 +29,10 @@ final object MatcherMessage extends Enumeration {
   val OOF = Value ("Rejected: Out Of Funds")
   val RJO = Value ("Rejected: Other Error")
 
+}
+
+// Generic System Component
+abstract class SystemComponent {
+  type ClientsT = IList[String]
+  type OrdersT  = IList[String]
 }

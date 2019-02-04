@@ -1,3 +1,4 @@
+
 package task0
 
 import scalaz._
@@ -5,14 +6,7 @@ import Scalaz._
 import effect._
 import IO._
 
-// Generic System Component
-sealed abstract class SystemComponent {
-  type ClientsT = IList[String]
-  type OrdersT  = IList[String]
-}
-
-// Matching Engine
-final case class Matcher() extends SystemComponent
+import Exchange_pkg._
 
 // Input Transactor
 final case class Transactor (id:Int, clientsFile:String, ordersFile:String) extends SystemComponent {
@@ -49,3 +43,4 @@ final case class Transactor (id:Int, clientsFile:String, ordersFile:String) exte
   }
  
 }
+

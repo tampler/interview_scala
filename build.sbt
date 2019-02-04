@@ -6,7 +6,8 @@ libraryDependencies ++= Seq(
   // Main
   "org.scalaz"    %% "scalaz-core"            % "7.3.0-M27",
   "org.scalaz"    %% "scalaz-effect"          % "7.3.0-M27",
-  "org.scalaz"    %% "scalaz-concurrent"      % "7.3.0-M27",
+  "org.scalaz"    %% "scalaz-zio"             % "0.6.0", 
+  //"org.scalaz"    %% "scalaz-concurrent"      % "7.3.0-M27",
   //"io.argonaut"   %% "argonaut"               % "6.2.2",
   //"org.scala-stm" %% "scala-stm"              % "0.8",
   //"org.scalacheck"%% "scalacheck"             % "1.14.0" % "test",
