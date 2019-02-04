@@ -5,18 +5,21 @@ import Scalaz._
 import effect._
 import IO._
 
+// Generic System Component
 sealed abstract class SystemComponent {
   type ClientsT = IList[String]
   type OrdersT  = IList[String]
 }
 
+// Matching Engine
 final case class Matcher() extends SystemComponent
 
+// Input Transactor
 final case class Transactor (id:Int, clientsFile:String, ordersFile:String) extends SystemComponent {
 
 
   // Wrap to IO monad
-  def readData (fin:String):ClientsT = {
+  def readFile (fin:String):ClientsT = {
 
     // Wrap unsafe operation into a safe IO Monad
     val stream  = IO {
@@ -29,14 +32,20 @@ final case class Transactor (id:Int, clientsFile:String, ordersFile:String) exte
   }
 
   // Initialization
-  def init():Unit = {
+  def init():Boolean = {
 
     val act0  = for {
       _ <- putStrLn("Initialization...")
     } yield()
-    
+   
+    // Returns okay if all works fine. Unsafe IO may throw an exception
     act0.unsafePerformIO
-  
+    true 
+  }
+
+  def show(in:ClientsT):Boolean = {
+    in map (i => println(i))
+    true
   }
  
 }

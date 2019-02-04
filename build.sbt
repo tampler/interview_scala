@@ -9,8 +9,10 @@ libraryDependencies ++= Seq(
   "org.scalaz"    %% "scalaz-concurrent"      % "7.3.0-M27",
   //"io.argonaut"   %% "argonaut"               % "6.2.2",
   //"org.scala-stm" %% "scala-stm"              % "0.8",
-  "org.scalacheck"%% "scalacheck"             % "1.14.0" % "test",
-  "org.specs2"    %% "specs2-core"            % "4.3.5"  % "test",
+  //"org.scalacheck"%% "scalacheck"             % "1.14.0" % "test",
+  //"org.specs2"    %% "specs2-core"            % "4.3.5"  % "test",
+  "org.scalactic" %% "scalactic"              % "3.0.5",
+  "org.scalatest" %% "scalatest"              % "3.0.5" % "test"
 )
 
 scalacOptions in Test ++= Seq("-Yrangepos", "-Xlint")
