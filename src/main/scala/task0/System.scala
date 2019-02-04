@@ -4,15 +4,24 @@ package task0
 import scalaz.zio.{IO, Queue}
 import Exchange_pkg._
 
+sealed trait SystemConfig {
+  val MaxMessages = 10
+}
+
+
 // Top level system
-final case class System() extends SystemComponent {
+final case class System(clientsFile:String, ordersFile:String) extends SystemComponent with SystemConfig {
 
-  val reqQueue:IO[Nothing, Queue[ClientsT]]  = Queue.bounded[ClientsT] (100)
+  val reqQueue:IO[Nothing, ReqMsgQueue] = Queue.bounded[ReqMsgT] (MaxMessages)
+  val rspQueue:IO[Nothing, RspMsgQueue] = Queue.bounded[RspMsgT] (MaxMessages)
 
-  val transactor  = Transactor(0, "","")
-  val matcher  = Matcher()
+  val trans   = Transactor(0, clientsFile, ordersFile)
+  val matcher = Matcher()
   
-  
+  def loopback ():Unit = {
+    //trans.loopback(reqQueue, rspQueue)
+    //matcher.loopback(reqQueue, rspQueue)
+  }
 
 }
 

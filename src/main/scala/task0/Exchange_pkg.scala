@@ -3,6 +3,7 @@ package Exchange_pkg
 
 import scala.{Enumeration}
 import scalaz.{IList}
+import scalaz.zio.{Queue}
 
 
 // Common Types
@@ -23,6 +24,7 @@ final case object SecurityD extends Security
 final object MatcherMessage extends Enumeration {
 
   type Message = Value 
+
   val MF  = Value ("Matched Fully")
   val MP  = Value ("Matched Partially")
   val IOE = Value ("Invalid Order Entry")
@@ -33,6 +35,13 @@ final object MatcherMessage extends Enumeration {
 
 // Generic System Component
 abstract class SystemComponent {
+
   type ClientsT = IList[String]
   type OrdersT  = IList[String]
+
+  type ReqMsgT  = String
+  type RspMsgT  = String 
+
+  type ReqMsgQueue  = Queue[ReqMsgT]
+  type RspMsgQueue  = Queue[RspMsgT]
 }

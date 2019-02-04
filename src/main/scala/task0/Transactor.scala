@@ -11,6 +11,7 @@ import Exchange_pkg._
 // Input Transactor
 final case class Transactor (id:Int, clientsFile:String, ordersFile:String) extends SystemComponent {
 
+  lazy val clientData:ClientsT = readFile(clientsFile)
 
   // Wrap to IO monad
   def readFile (fin:String):ClientsT = {
@@ -31,16 +32,39 @@ final case class Transactor (id:Int, clientsFile:String, ordersFile:String) exte
     val act0  = for {
       _ <- putStrLn("Initialization...")
     } yield()
-   
+  
     // Returns okay if all works fine. Unsafe IO may throw an exception
     act0.unsafePerformIO
     true 
   }
 
-  def show(in:ClientsT):Boolean = {
+  // Show contents of some container
+  //def show[A <: TraversableLike ](in:A):Boolean = {
+  //def show[+A <: IList[A] ](in:A):Boolean = {  // FIXME
+  def show (in:ClientsT):Boolean = {  // FIXME
     in map (i => println(i))
     true
   }
- 
-}
 
+  // Write request queue with input data
+  def dispatch (reqQ:ReqMsgQueue):Unit = {
+    
+    clientData map ( i => reqQ.offer(i) )
+
+  }
+ 
+  // Read response Queue and take no action
+  def retire (rspQ:RspMsgQueue):Unit = {
+    
+    val res = for {
+      item <- rspQ.take
+    } yield(item)
+  
+  }
+  
+  // Loopback method. Sends back what's on input
+  def loopback (reqQ:ReqMsgQueue, rspQ:RspMsgQueue):Unit = {
+    dispatch(reqQ) 
+    retire(rspQ)
+  }
+}
