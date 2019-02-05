@@ -3,8 +3,6 @@ package Exchange_pkg
 
 import scala.{Enumeration}
 import scalaz.{IList}
-import scalaz.zio.{Queue}
-
 
 // Common Types
 sealed abstract class Currency
@@ -39,9 +37,6 @@ abstract class SystemComponent {
   type ClientsT = IList[String]
   type OrdersT  = IList[String]
 
-  type ReqMsgT  = String
-  type RspMsgT  = String 
+  type MsgT = String
 
-  type ReqMsgQueue  = Queue[ReqMsgT]
-  type RspMsgQueue  = Queue[RspMsgT]
 }

@@ -47,24 +47,9 @@ final case class Transactor (id:Int, clientsFile:String, ordersFile:String) exte
   }
 
   // Write request queue with input data
-  def dispatch (reqQ:ReqMsgQueue):Unit = {
-    
-    clientData map ( i => reqQ.offer(i) )
-
-  }
+  def dispatch ():ClientsT = clientData
  
   // Read response Queue and take no action
-  def retire (rspQ:RspMsgQueue):Unit = {
-    
-    val res = for {
-      item <- rspQ.take
-    } yield(item)
+  def retire ():Unit = {}
   
-  }
-  
-  // Loopback method. Sends back what's on input
-  def loopback (reqQ:ReqMsgQueue, rspQ:RspMsgQueue):Unit = {
-    dispatch(reqQ) 
-    retire(rspQ)
-  }
 }
