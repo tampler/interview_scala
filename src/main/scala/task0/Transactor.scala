@@ -51,5 +51,20 @@ final case class Transactor (id:Int, clientsFile:String, ordersFile:String) exte
  
   // Read response Queue and take no action
   def retire ():Unit = {}
-  
+
+  // Parse input data and repack into 6-tuples
+  def parse (lines:ClientsT): Unit = {
+
+    lines map { entry =>  
+
+      val res = entry split ("\t") map (_.trim) match {
+
+        case Array (a,b,c,d,e,f) => Position (a.toString, b.toInt, c.toInt, d.toInt, e.toInt, f.toInt)
+        case _ => // TBD: Add error handler here
+      }
+
+      println (res)
+    }
+  }
+
 }

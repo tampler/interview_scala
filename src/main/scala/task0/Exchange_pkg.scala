@@ -9,7 +9,7 @@ sealed abstract class Currency
 sealed abstract class Security
 sealed abstract class Trader
 
-final case object USD extends Currency
+final case object RUR extends Currency
 final case object BuySide extends Trader
 final case object SellSide extends Trader
 
@@ -40,3 +40,14 @@ abstract class SystemComponent {
   type MsgT = String
 
 }
+   
+// Initial Customer Position. Given as an input file
+final case class Position (id:String, amount:Int, posA:Int, posB:Int, posC:Int, posD:Int)
+
+object Position {
+  
+  def apply (id:String, amount:Int, posA:Int, posB:Int, posC:Int, posD:Int) = new Position (id, amount, posA, posB, posC, posD)
+  def toString(id:String, amount:Int, posA:Int, posB:Int, posC:Int, posD:Int): String = s"Customer: $id, Amount: $amount"
+
+}
+
