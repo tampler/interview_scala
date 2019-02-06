@@ -3,7 +3,7 @@ package task0
 
 import org.scalatest.{FlatSpec, Matchers}
 
-class InitUnitTest extends FlatSpec with Matchers { 
+class ParseUnitTest extends FlatSpec with Matchers { 
 
   "Transactor" should "read input files correctly" in {
     
@@ -11,10 +11,14 @@ class InitUnitTest extends FlatSpec with Matchers {
     val ordersFile  = "/tmp/orders.txt"
 
     val top  = Transactor(1, clientsFile, ordersFile)
-    top.init() should be (true)
-
     val clientData  = top.readFile(clientsFile)
-    top.show(clientData) should be (true)
+   
+    // Run parser externally
+    clientData map ( item => 
+      println(top.parse(item))
+    ) 
+  
+    true should be (true)
   } 
 
 }

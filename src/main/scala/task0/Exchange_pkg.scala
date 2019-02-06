@@ -39,15 +39,10 @@ abstract class SystemComponent {
 
   type MsgT = String
 
+  type ClientData = Tuple6[String,Int,Int,Int,Int,Int]
 }
    
 // Initial Customer Position. Given as an input file
-final case class Position (id:String, amount:Int, posA:Int, posB:Int, posC:Int, posD:Int)
-
-object Position {
-  
-  def apply (id:String, amount:Int, posA:Int, posB:Int, posC:Int, posD:Int) = new Position (id, amount, posA, posB, posC, posD)
-  def toString(id:String, amount:Int, posA:Int, posB:Int, posC:Int, posD:Int): String = s"Customer: $id, Amount: $amount"
-
-}
+sealed abstract class Record
+final case class Position (id:String, amount:Int, posA:Int, posB:Int, posC:Int, posD:Int) extends Record
 
