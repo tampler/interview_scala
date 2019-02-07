@@ -59,15 +59,16 @@ abstract class SystemComponent {
 // Initial Customer Position. Given as an input file
 sealed abstract class Record
 final case class Position (id:String, amount:Int, pos:Seq[Int]) extends Record
-final case class Order (cust:String, side:OrderType.type, sec:SecurityType.type, price:Int, qty:Int) extends Record
-
-object Order {
-
-  def toOrder (s:String) = s match {
-    case "b"  => OrderType.b
-    case "s"  => OrderType.s
-    case _    => OrderType.inv
-  }
-
-}
+final case class MarketOrder (cust:String, side:String, sec:String, price:Int, qty:Int) extends Record
+//final case class Order (cust:String, side:OrderType.type, sec:SecurityType.type, price:Int, qty:Int) extends Record
+//
+//object Order {
+//
+//  implicit def StringtoOrder (s:String):OrderType.id = s match {
+//    case "b"  => OrderType.b
+//    case "s"  => OrderType.s
+//    case _    => OrderType.inv
+//  }
+//
+//}
 

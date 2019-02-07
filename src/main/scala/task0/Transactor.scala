@@ -11,7 +11,8 @@ import Exchange_pkg._
 // Input Transactor
 final case class Transactor (id:Int, clientsFile:String, ordersFile:String) extends SystemComponent {
 
-  lazy val clientData:ClientsT = readFile(clientsFile)
+  lazy val clientData:ClientsT  = readFile(clientsFile)
+  lazy val orderData:OrdersT    = readFile(ordersFile)
 
   // Wrap to IO monad
   def readFile (fin:String):ClientsT = {
@@ -52,29 +53,18 @@ final case class Transactor (id:Int, clientsFile:String, ordersFile:String) exte
   // Read response Queue and take no action
   def retire ():Unit = {}
 
-  // Parse input data 
-  def parse (str:String)  = {
+  // Parse input files. Works for Client and Order data files
+  def parseInputData (str:String)  = {
 
     val out = str split ("\t") map (_.trim) match {
 
-      case Array (id, amount, seqPos @ _*) => Position (id.toString, amount.toInt, seqPos map(_.toInt))
-      case _ => Position("", 0, _) // TBD: Add error handling here
+      case Array (id, side, sec, price, qty)  => MarketOrder(id.toString, side.toString, sec.toString, price.toInt, qty.toInt)
+      case Array (id, amount, seqPos @ _*)    => Position   (id.toString, amount.toInt, seqPos map(_.toInt)) // match on Seq[Int]
+      case _ => // TBD: Add error handling here
+
     }
 
     out
   }
-  
-  //def parseOrd (str:String)  = {
-
-  //  val EOrd  = Exchange_pkg.Order
-  //  
-  //  val out = str split ("\t") map (_.trim) match {
-
-  //    case Array (id, side, sec, price, qty) => EOrd (id.toString, EOrd.toOrder(side), sec, price.toInt, qty.toInt)
-  //    //case _ => Order("", 0) // TBD: Add error handling here
-  //  }
-
-  //  out
-  //}
 
 }
