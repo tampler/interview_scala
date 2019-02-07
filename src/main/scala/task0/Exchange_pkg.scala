@@ -6,22 +6,12 @@ import scalaz.{IList}
 
 // Common Types
 sealed abstract class Currency
-sealed abstract class Security
-sealed abstract class Trader
-
 final case object RUR extends Currency
-final case object BuySide extends Trader
-final case object SellSide extends Trader
-
-final case object SecurityA extends Security
-final case object SecurityB extends Security
-final case object SecurityC extends Security
-final case object SecurityD extends Security 
 
 // Response messages from the Matching Engine
 final object MatcherMessage extends Enumeration {
 
-  type Message = Value 
+  type MatcherMessage = Value 
 
   val MF  = Value ("Matched Fully")
   val MP  = Value ("Matched Partially")
@@ -29,6 +19,30 @@ final object MatcherMessage extends Enumeration {
   val OOF = Value ("Rejected: Out Of Funds")
   val RJO = Value ("Rejected: Other Error")
 
+}
+
+final object OrderType extends Enumeration {
+
+  type OrderType = Value 
+
+  val inv = Value ("invalid entry")
+  
+  val b = Value ("buy")
+  val s = Value ("sell")
+
+}
+
+final object SecurityType extends Enumeration {
+
+  type SecurityType = Value 
+
+  val inv   = Value ("invalid entry")
+  
+  val secA  = Value ("Security A")
+  val secB  = Value ("Security B")
+  val secC  = Value ("Security C")
+  val secD  = Value ("Security D")
+  
 }
 
 // Generic System Component
@@ -44,5 +58,16 @@ abstract class SystemComponent {
    
 // Initial Customer Position. Given as an input file
 sealed abstract class Record
-final case class Position (id:String, amount:Int, posA:Int, posB:Int, posC:Int, posD:Int) extends Record
+final case class Position (id:String, amount:Int, pos:Seq[Int]) extends Record
+final case class Order (cust:String, side:OrderType.type, sec:SecurityType.type, price:Int, qty:Int) extends Record
+
+object Order {
+
+  def toOrder (s:String) = s match {
+    case "b"  => OrderType.b
+    case "s"  => OrderType.s
+    case _    => OrderType.inv
+  }
+
+}
 

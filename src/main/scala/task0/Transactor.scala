@@ -52,16 +52,29 @@ final case class Transactor (id:Int, clientsFile:String, ordersFile:String) exte
   // Read response Queue and take no action
   def retire ():Unit = {}
 
-  // Parse input data and repack into 6-tuples
-  def parse (str:String):Position  = {
+  // Parse input data 
+  def parse (str:String)  = {
 
-    val out:Position = str split ("\t") map (_.trim) match {
+    val out = str split ("\t") map (_.trim) match {
 
-      case Array (a,b,c,d,e,f) => Position (a.toString, b.toInt, c.toInt, d.toInt, e.toInt, f.toInt)
-      case _ => Position("", 0, 0, 0, 0, 0) // TBD: Add error handling here
+      case Array (id, amount, seqPos @ _*) => Position (id.toString, amount.toInt, seqPos map(_.toInt))
+      case _ => Position("", 0, _) // TBD: Add error handling here
     }
 
     out
   }
+  
+  //def parseOrd (str:String)  = {
+
+  //  val EOrd  = Exchange_pkg.Order
+  //  
+  //  val out = str split ("\t") map (_.trim) match {
+
+  //    case Array (id, side, sec, price, qty) => EOrd (id.toString, EOrd.toOrder(side), sec, price.toInt, qty.toInt)
+  //    //case _ => Order("", 0) // TBD: Add error handling here
+  //  }
+
+  //  out
+  //}
 
 }

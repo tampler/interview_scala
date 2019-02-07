@@ -12,10 +12,15 @@ class ParseUnitTest extends FlatSpec with Matchers {
 
     val top  = Transactor(1, clientsFile, ordersFile)
     val clientData  = top.readFile(clientsFile)
-   
+  
+    //type parseT  = Position
+    //val parseFunc  = top.parse[parseT]
+    val parseFunc  = top.parse (_)
+    
+
     // Run parser externally
     clientData map ( item => 
-      println(top.parse(item))
+      println(parseFunc(item))
     ) 
   
     true should be (true)
