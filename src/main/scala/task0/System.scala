@@ -3,7 +3,7 @@ package task0
 
 import scalaz._
 import Scalaz._
-import scalaz.zio.{IO, Queue, RTS}
+import scalaz.zio.{IO, Queue}
 import scalaz.zio.console.{putStrLn}
 
 import Exchange_pkg._
@@ -14,16 +14,22 @@ sealed trait SystemConfig {
 
 
 // Top level system
-final case class System(clientsFile:String, ordersFile:String) extends SystemComponent with SystemConfig {
+final class System(clientsFile:String, ordersFile:String) extends SystemComponent with SystemConfig {
+  
+  override def toString () = "System"
 
-  val trans   = Transactor(0, clientsFile, ordersFile)
-  val matcher = Matcher()
+  val trans   = new Transactor(0, clientsFile, ordersFile)
+  val matcher = new Matcher()
+  
+  def init():Boolean = {
+    matcher.init()
+    trans.init()
+    rts.unsafeRun (putStrLn(this.toString + " Init..."))
+    true 
+  }
  
   // This implements a ping-pong loopback with a customer data
   def loopback ():Unit = {
-
-    // ZIO IO wrapper
-    val rts = new RTS {}
 
     val res: IO[Nothing, Unit] = for {
 

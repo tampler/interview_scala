@@ -10,9 +10,12 @@ class ParseUnitTest extends FlatSpec with Matchers {
     val clientsFile = "/tmp/clients.txt"
     val ordersFile  = "/tmp/orders.txt"
 
-    val top  = Transactor(1, clientsFile, ordersFile)
+    val top  = new Transactor(1, clientsFile, ordersFile)
     val parse = top.parseInputData(_)
-    
+  
+    top.init()
+
+
     // Parse Client Data
     top.clientData map ( item => 
       println (parse(item))
@@ -20,9 +23,9 @@ class ParseUnitTest extends FlatSpec with Matchers {
     ) 
     
     // Parse Orders Data
-    top.orderData map ( item => 
-      println (parse(item))
-    ) 
+    //top.orderData map ( item => 
+    //  println (parse(item))
+    //) 
   
     true should be (true)
   } 

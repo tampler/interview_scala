@@ -10,7 +10,7 @@ class LoopbackUnitTest extends FlatSpec with Matchers {
     val clientsFile = "/tmp/clients.txt"
     val ordersFile  = "/tmp/orders.txt"
  
-    val sys  = System(clientsFile, ordersFile)
+    val sys  = new System(clientsFile, ordersFile)
 
     sys.loopback()
     

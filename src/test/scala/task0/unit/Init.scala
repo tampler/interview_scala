@@ -10,11 +10,13 @@ class InitUnitTest extends FlatSpec with Matchers {
     val clientsFile = "/tmp/clients.txt"
     val ordersFile  = "/tmp/orders.txt"
 
-    val top  = Transactor(1, clientsFile, ordersFile)
+    val top  = new System(clientsFile, ordersFile)
     top.init() should be (true)
 
-    val clientData  = top.readFile(clientsFile)
-    top.show(clientData) should be (true)
+    val t  = top.trans
+    
+    val clientData  = t.readFile(clientsFile)
+    t.show(clientData) should be (true)
   } 
 
 }

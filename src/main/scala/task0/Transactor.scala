@@ -3,39 +3,36 @@ package task0
 
 import scalaz._
 import Scalaz._
-import effect._
-import IO._
+import scalaz.zio.{IO}
+import scalaz.zio.console.{putStrLn}
 
 import Exchange_pkg._
 
 // Input Transactor
-final case class Transactor (id:Int, clientsFile:String, ordersFile:String) extends SystemComponent {
+final class Transactor (id:Int, clientsFile:String, ordersFile:String) extends SystemComponent {
+    
+  override def toString () = "Transactor"
+  
 
   lazy val clientData:ClientsT  = readFile(clientsFile)
   lazy val orderData:OrdersT    = readFile(ordersFile)
 
-  // Wrap to IO monad
+  // Type safe file reader
   def readFile (fin:String):ClientsT = {
 
     // Wrap unsafe operation into a safe IO Monad
-    val stream  = IO {
-      val source  = scala.io.Source.fromFile(fin)
+    val stream = IO.syncException {
+      val source = scala.io.Source.fromFile(fin)
       source.getLines.toStream
     }
-   
+  
     // safely return
-    stream.unsafePerformIO.toIList
+    rts.unsafeRun (stream).toIList
   }
 
   // Initialization
   def init():Boolean = {
-
-    val act0  = for {
-      _ <- putStrLn("Initialization...")
-    } yield()
-  
-    // Returns okay if all works fine. Unsafe IO may throw an exception
-    act0.unsafePerformIO
+    rts.unsafeRun (putStrLn(this.toString + " Init..."))
     true 
   }
 

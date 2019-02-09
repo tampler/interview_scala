@@ -3,6 +3,7 @@ package Exchange_pkg
 
 import scala.{Enumeration}
 import scalaz.{IList}
+import scalaz.zio.{IO, Queue, RTS}
 
 // Common Types
 sealed abstract class Currency
@@ -15,15 +16,15 @@ final object MatcherMessage extends Enumeration {
 
   val MF  = Value ("Matched Fully")
   val MP  = Value ("Matched Partially")
-  val IOE = Value ("Invalid Order Entry")
+  val IOE = Value ("Invalid oer Entry")
   val OOF = Value ("Rejected: Out Of Funds")
   val RJO = Value ("Rejected: Other Error")
 
 }
 
-final object OrderType extends Enumeration {
+final object oerType extends Enumeration {
 
-  type OrderType = Value 
+  type oerType = Value 
 
   val inv = Value ("invalid entry")
   
@@ -47,27 +48,44 @@ final object SecurityType extends Enumeration {
 
 // Generic System Component
 abstract class SystemComponent {
+  
+  // ZIO effect wrapper
+  val rts = new RTS {}
 
   type ClientsT = IList[String]
   type OrdersT  = IList[String]
 
   type MsgT = String
 
-  type ClientData = Tuple6[String,Int,Int,Int,Int,Int]
 }
+  
    
-// Initial Customer Position. Given as an input file
+// Initial idomer Position. Given as an input file
 sealed abstract class Record
-final case class Position (id:String, amount:Int, pos:Seq[Int]) extends Record
-final case class MarketOrder (cust:String, side:String, sec:String, price:Int, qty:Int) extends Record
-//final case class Order (cust:String, side:OrderType.type, sec:SecurityType.type, price:Int, qty:Int) extends Record
+final case class Position (val id:String, val amount:Int, val pos:Seq[Int]) extends Record
+final case class MarketOrder (val id:String, val side:String, val sec:String, val price:Int, val qty:Int) extends Record
+
+
+//final object Position {
+//  def apply (id:String, amount:Int, pos:Seq[Int]):Position = new Position(id:String, amount:Int, pos:Seq[Int])
+//  def unapply (p:Position):Option[String, Int, Seq[Int]] = Some(o.id, o.amount, )
+//}
 //
-//object Order {
+//final object MarketOrder {
+//  def apply (id:String, side:String, sec:String, price:Int, qty:Int):MarketOrder = new MarketOrder(id:String, side:String, sec:String, price:Int, qty:Int)
 //
-//  implicit def StringtoOrder (s:String):OrderType.id = s match {
-//    case "b"  => OrderType.b
-//    case "s"  => OrderType.s
-//    case _    => OrderType.inv
+//  def unapply (o:MarketOrder):Option[Tuple5[String, String, String, Int, Int]] = Some(o.id, o.side, o.sec, o.price, o.qty)
+//}
+
+
+//final case class MarketOrder (id:String, side:oerType.type, sec:SecurityType.type, price:Int, qty:Int) extends Reco
+//
+//object MarketOrder {
+//
+//  implicit def Stringtooer (s:String):oerType.id = s match {
+//    case "b"  => oerType.b
+//    case "s"  => oerType.s
+//    case _    => oerType.inv
 //  }
 //
 //}
