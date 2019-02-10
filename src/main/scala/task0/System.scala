@@ -3,7 +3,7 @@ package task0
 
 import scalaz._
 import Scalaz._
-import scalaz.zio.{IO, Queue}
+import scalaz.zio.{IO, Queue, Fiber}
 import scalaz.zio.console.{putStrLn}
 
 import Exchange_pkg._
@@ -24,11 +24,52 @@ final class System(clientsFile:String, ordersFile:String) extends SystemComponen
     rts.unsafeRun (putStrLn(this.toString + " Init..."))
   }
 
+  // System components
   val trans   = new Transactor(0, ordersFile)
   val matcher = new Matcher(clientsFile)
   
- 
-  // This implements a ping-pong loopback with a customer data
+  //--------------------------------------------------------------------------------------------
+  // Main Business Logic
+  //--------------------------------------------------------------------------------------------
+  def main ():Unit = {
+
+    val res: IO[Nothing, Unit] = for {
+
+      // Create queues
+      reqQueue <- Queue.bounded[MsgT](MaxMessages)
+      rspQueue <- Queue.bounded[MsgT](MaxMessages)
+
+      // Send batch. Type safe, async, thread safe
+      send = trans.dispatch()
+      _ <- reqQueue.offerAll(send.toList)
+
+      // Debug: req queue info
+      _ <- putStrLn(reqQueue.capacity.toString)
+      reqSize <- reqQueue.size
+      _ <- putStrLn(reqSize.toString)
+
+      // Receive batch. Type safe, async, thread safe
+      data <- reqQueue.takeAll
+     
+      //_ <- data.shit
+      // Spawn parallel Fibers and perform matching optimistically
+      //workerFiber     <-  matcher.validate (data).fork
+      //validatorFiber  <-  matcher.process (data).fork
+      //
+      //valid           <-  validatorFiber.join
+      //_               <-  if (!valid) workerFiber.interrupt(BadOrder(data))
+      //out             <-  workerFiber.join
+
+    } yield ()
+
+    // Launch IO Effect
+    rts.unsafeRun(res)
+  }
+
+  //--------------------------------------------------------------------------------------------
+  // Loopback test. For integration testing
+  //--------------------------------------------------------------------------------------------
+  
   def loopback ():Unit = {
 
     val res: IO[Nothing, Unit] = for {
@@ -63,6 +104,8 @@ final class System(clientsFile:String, ordersFile:String) extends SystemComponen
     // Launch IO Effect
     rts.unsafeRun(res)
   }
+
+  
 
 }
 

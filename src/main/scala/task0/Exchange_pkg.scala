@@ -4,6 +4,9 @@ package Exchange_pkg
 import scala.{Enumeration}
 import scalaz.{IList}
 import scalaz.zio.{RTS}
+import scala.annotation.switch
+import scala.util.control.NoStackTrace
+
 
 // Common Types
 sealed abstract class Currency
@@ -46,6 +49,9 @@ final object SecurityType extends Enumeration {
   
 }
 
+// Exception messages
+final class BadOrder () extends Throwable with NoStackTrace
+
 // Generic System Component
 abstract class SystemComponent {
   
@@ -55,6 +61,7 @@ abstract class SystemComponent {
   // Input data format
   type ClientsT = IList[String]
   type OrdersT  = IList[String]
+  type DataT    = List[String]
 
   // Messaging Queue format
   type MsgT = String
@@ -65,7 +72,10 @@ abstract class SystemComponent {
   // Parse input files. Works for Client and Order data files
   def parseInputData (str:String)  = {
 
-    val out = str split ("\t") map (_.trim) match {
+
+    val tmp  = str split ("\t") map (_.trim)
+    
+    val out = (tmp: @switch) match { // FIXME - how to infer a switch here ?
 
       case Array (id, side, sec, price, qty)  => MarketOrder(id.toString, side.toString, sec.toString, price.toInt, qty.toInt)
       case Array (id, amount, seqPos @ _*)    => Position   (id.toString, amount.toInt, seqPos map(_.toInt)) // match on Seq[Int]

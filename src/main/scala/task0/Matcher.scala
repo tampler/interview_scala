@@ -3,6 +3,7 @@ package task0
 import scalaz._
 import Scalaz._
 import scalaz.zio.console.{putStrLn}
+import scalaz.zio.{IO}
 import Exchange_pkg._
 import Resources_pkg._
 
@@ -20,6 +21,17 @@ final class Matcher(clientsFile:String) extends SystemComponent {
   
   // Loopback method. Sends back what's on input
   def loopback (data:ClientsT):ClientsT = data 
+
+  //--------------------------------------------------------------------------------------------
+  // Business Logic. Matching methods
+  //--------------------------------------------------------------------------------------------
+  
+  @inline 
+  def validate(data:DataT): IO[Exception, Boolean] = IO.syncException (true)
+
+  @inline 
+  def process(data:DataT): IO[Exception, Unit] = IO.syncException ()
+
 
 }
 
