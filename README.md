@@ -17,8 +17,10 @@ Main requirements:
 
 [Task Spec En](https://github.com/tampler/interview_scala/blob/master/doc/task0_en.md)
 
+PS: When working with a **really Bleeding Edge technology**, be ready to debug library bugs as well. Submitted [an issue](https://github.com/scalaz/scalaz-zio/issues/567) in the ZIO lib, related to Stack Overflow in an Async Queue
+
 ## Implementation details
-I decided to build around [ScalaZ](https://scalaz.github.io/7/), due to its extra type safety, performance, a wide number of type classes and a wide community support. The latest ScalaZ spinoff, the [ZIO library](https://scalaz.github.io/scalaz-zio/) by John De Goes, was chosen to implement effectful IO and concurrency model, building [Fibers](https://scalaz.github.io/scalaz-zio/datatypes/fiber.html) around ScalaZ type classes
+I decided to build around [ScalaZ](https://scalaz.github.io/7/), due to its extra type safety, performance, a wide number of type classes and a wide community support. The latest ScalaZ spinoff, the [ZIO library](https://scalaz.github.io/scalaz-zio/) by John A.De Goes, was chosen to implement effectful IO and concurrency model, building [Fibers](https://scalaz.github.io/scalaz-zio/datatypes/fiber.html) around ScalaZ type classes
 
 Each trade can be abstracted as a **Monoid with Ordering**, since the customer ballance may be zero and the only operation is |+| (adding) either positive (sell side) or negative (buy side).
 
