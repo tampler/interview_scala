@@ -3,7 +3,7 @@ package Exchange_pkg
 
 import scala.{Enumeration}
 import scalaz.{IList}
-import scalaz.zio.{IO, Queue, RTS}
+import scalaz.zio.{RTS}
 
 // Common Types
 sealed abstract class Currency
@@ -52,10 +52,34 @@ abstract class SystemComponent {
   // ZIO effect wrapper
   val rts = new RTS {}
 
+  // Input data format
   type ClientsT = IList[String]
   type OrdersT  = IList[String]
 
+  // Messaging Queue format
   type MsgT = String
+ 
+  // Component Initialization
+  def init():Unit
+
+  // Parse input files. Works for Client and Order data files
+  def parseInputData (str:String)  = {
+
+    val out = str split ("\t") map (_.trim) match {
+
+      case Array (id, side, sec, price, qty)  => MarketOrder(id.toString, side.toString, sec.toString, price.toInt, qty.toInt)
+      case Array (id, amount, seqPos @ _*)    => Position   (id.toString, amount.toInt, seqPos map(_.toInt)) // match on Seq[Int]
+      case _ => // TBD: Add error handling here
+
+    }
+
+    out
+  }
+  
+  // Show contents of some container
+  def show (in:ClientsT):Unit = { 
+    in map (i => println(i))
+  }
 
 }
   
