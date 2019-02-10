@@ -33,7 +33,8 @@ final class System(clientsFile:String, ordersFile:String) extends SystemComponen
   //--------------------------------------------------------------------------------------------
   def main ():Unit = {
 
-    val res: IO[Nothing, Unit] = for {
+    //val res: IO[Nothing, Unit] = for {
+    val res = for {
 
       // Create queues
       reqQueue <- Queue.bounded[MsgT](MaxMessages)
@@ -51,19 +52,23 @@ final class System(clientsFile:String, ordersFile:String) extends SystemComponen
       // Receive batch. Type safe, async, thread safe
       data <- reqQueue.takeAll
      
-      //_ <- data.shit
       // Spawn parallel Fibers and perform matching optimistically
-      //workerFiber     <-  matcher.validate (data).fork
-      //validatorFiber  <-  matcher.process (data).fork
-      //
-      //valid           <-  validatorFiber.join
-      //_               <-  if (!valid) workerFiber.interrupt(BadOrder(data))
-      //out             <-  workerFiber.join
+      workerFiber     <-  matcher.process (data).fork
+      validatorFiber  <-  matcher.validate(data).fork
+    
+      // Read validation result
+      valid           <-  validatorFiber.join 
+      
+      // Interrupt worker if validation vailed
+      _               =    if (!valid) workerFiber.interrupt 
 
-    } yield ()
+      // Read result from the worker thread
+      out             <-  workerFiber.join
+
+    } yield out
 
     // Launch IO Effect
-    rts.unsafeRun(res)
+    //rts.unsafeRun(res)
   }
 
   //--------------------------------------------------------------------------------------------

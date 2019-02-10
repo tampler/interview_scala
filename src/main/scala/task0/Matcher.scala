@@ -30,7 +30,7 @@ final class Matcher(clientsFile:String) extends SystemComponent {
   def validate(data:DataT): IO[Exception, Boolean] = IO.syncException (true)
 
   @inline 
-  def process(data:DataT): IO[Exception, Unit] = IO.syncException ()
+  def process(data:DataT): IO[Exception, Boolean] = IO.syncException (true)
 
 
 }
