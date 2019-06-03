@@ -1,0 +1,2 @@
+object ZioMain extends App {
+}
