@@ -5,8 +5,6 @@ maxErrors := 3
 
 val ZIOVersion  = "1.0-RC5"
 
-
-
 libraryDependencies ++= Seq(
   // Main
   "org.scalaz" %% "scalaz-zio" % ZIOVersion, 
@@ -23,7 +21,7 @@ libraryDependencies ++= Seq(
       "-language:existentials",
       //"-Xlint",
       "-Ypartial-unification",
-      "-Xfatal-warnings",
+      //"-Xfatal-warnings",
       "-Xlint:-infer-any,_",
       "-Ywarn-value-discard",
       "-Ywarn-numeric-widen",
