@@ -1,7 +1,5 @@
 package task0
 
-import scalaz._
-import Scalaz._
 import scalaz.zio.console.{putStrLn}
 import scalaz.zio.{IO}
 import Exchange_pkg._
@@ -17,7 +15,7 @@ final class Matcher(clientsFile:String) extends SystemComponent {
     rts.unsafeRun (putStrLn(this.toString + " Init..."))
   }
  
-  lazy val clientData:ClientsT = rts.unsafeRun(Temp.readFile(clientsFile)).toIList
+  lazy val clientData:ClientsT = rts.unsafeRun(Temp.readFile(clientsFile)).toList
   
   // Loopback method. Sends back what's on input
   def loopback (data:ClientsT):ClientsT = data 

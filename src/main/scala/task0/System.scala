@@ -1,9 +1,7 @@
 
 package task0
 
-import scalaz._
-import Scalaz._
-import scalaz.zio.{IO, Queue, Fiber}
+import scalaz.zio.{IO, Queue}
 import scalaz.zio.console.{putStrLn}
 
 import Exchange_pkg._
@@ -31,7 +29,7 @@ final class System(clientsFile:String, ordersFile:String) extends SystemComponen
   //--------------------------------------------------------------------------------------------
   // Main Business Logic
   //--------------------------------------------------------------------------------------------
-  def main ():Unit = {
+  def main () = {
 
     //val res: IO[Nothing, Unit] = for {
     val res = for {
@@ -96,7 +94,7 @@ final class System(clientsFile:String, ordersFile:String) extends SystemComponen
       receive <- reqQueue.takeAll
 
       // Send back
-      resp = matcher.loopback(receive.toIList)
+      resp = matcher.loopback(receive.toList)
       _ <- rspQueue.offerAll(resp.toList)
       
       // Debug: resp queue info

@@ -1,9 +1,6 @@
 
 package task0
 
-import scalaz._
-import Scalaz._
-import scalaz.zio.{IO}
 import scalaz.zio.console.{putStrLn}
 
 import Exchange_pkg._
@@ -18,7 +15,7 @@ final class Transactor (id:Int, ordersFile:String) extends SystemComponent {
     rts.unsafeRun (putStrLn(this.toString + " Init..."))
   }
 
-  lazy val orderData:ClientsT = rts.unsafeRun(Temp.readFile(ordersFile)).toIList
+  lazy val orderData:ClientsT = rts.unsafeRun(Temp.readFile(ordersFile)).toList
 
   // Write request queue with input data
   def dispatch ():ClientsT = orderData

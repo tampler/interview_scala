@@ -2,7 +2,7 @@
 package Exchange_pkg
 
 import scala.{Enumeration}
-import scalaz.{IList}
+//import scalaz.{IList}
 import scalaz.zio.{RTS}
 import scala.annotation.switch
 import scala.util.control.NoStackTrace
@@ -59,8 +59,8 @@ abstract class SystemComponent {
   val rts = new RTS {}
 
   // Input data format
-  type ClientsT = IList[String]
-  type OrdersT  = IList[String]
+  type ClientsT = List[String]
+  type OrdersT  = List[String]
   type DataT    = List[String]
 
   // Messaging Queue format
@@ -88,7 +88,8 @@ abstract class SystemComponent {
   
   // Show contents of some container
   def show (in:ClientsT):Unit = { 
-    in map (i => println(i))
+    //in map (i => println(i))
+    in.foreach (println)
   }
 
 }
