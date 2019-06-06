@@ -1,7 +1,7 @@
-package exchange 
+package exchange
 
-import scalaz.zio.{UIO, IO}
-import java.io.{File, FileInputStream}
+import scalaz.zio.{ IO, UIO }
+import java.io.{ File, FileInputStream }
 
 object zio_resources {
 
@@ -20,19 +20,16 @@ object zio_resources {
     def openFile(file: File): IO[Exception, InputStream] =
       IO.effectTotal(new InputStream(new FileInputStream(file)))
 
-    def openFile (fin:String): IO[Exception, Stream[String]] = {
-  
+    def openFile(fin: String): IO[Exception, Stream[String]] = {
+
       // Wrap unsafe operation into a safe IO Monad
       val stream = IO.effectTotal {
         val source = scala.io.Source.fromFile(fin)
         source.getLines.toStream
       }
-      stream 
+      stream
     }
 
     def closeFile(f: File): UIO[Unit] = IO.succeedLazy(???)
   }
 }
-
-
-
